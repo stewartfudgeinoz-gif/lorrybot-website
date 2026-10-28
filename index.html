@@ -285,26 +285,6 @@
     background-image:repeating-linear-gradient(45deg, var(--freight-blue) 0 2px, transparent 2px 26px);
   }
 
-  /* ---------- Contact form ---------- */
-  .contact{ background:var(--cloud); }
-  .contact h2{ color:var(--midnight-navy); text-align:center; font-size:clamp(1.6rem,3vw,2.2rem); }
-  .contact > .container > p.kicker{ text-align:center; color:var(--slate); max-width:560px; margin:0 auto 2.6em; }
-  form.booking-form{
-    max-width:640px; margin:0 auto; background:var(--white); padding:36px;
-    border-radius:var(--radius); border:1px solid #E4E9F0;
-  }
-  .form-row{ margin-bottom:20px; }
-  .form-row label{ display:block; font-weight:700; font-size:.92rem; color:var(--midnight-navy); margin-bottom:.4em; }
-  .form-row input, .form-row textarea{
-    width:100%; padding:.85em 1em; border:1.5px solid #D4DCE8; border-radius:6px;
-    font-family:var(--font-body); font-size:1rem; color:var(--ink); background:var(--white);
-  }
-  .form-row input:focus, .form-row textarea:focus{ border-color:var(--freight-blue); }
-  .form-row textarea{ resize:vertical; min-height:120px; }
-  .form-note{ font-size:.85rem; color:var(--slate); margin-top:-6px; margin-bottom:20px; }
-  .form-status{ font-size:.92rem; margin-top:14px; }
-  .form-status[data-state="success"]{ color:#106B2E; }
-  .form-status[data-state="error"]{ color:#B3261E; }
 
   /* ---------- Footer ---------- */
   footer{ background:var(--midnight-navy); color:#C7D2E6; padding:64px 0 32px; }
@@ -317,6 +297,7 @@
     display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px 32px;
     padding-bottom:36px; margin-bottom:40px; border-bottom:1px solid rgba(255,255,255,.12);
   }
+  .footer-cta{ scroll-margin-top:120px; } /* keep it clear of the sticky header when linked to */
   .footer-cta p{ margin:0; color:var(--white); font-family:var(--font-head); font-weight:700; font-size:1.15rem; }
   .footer-cta .cta-row{ display:flex; gap:16px; flex-wrap:wrap; }
   /* footer a:hover would otherwise turn the button text yellow-on-yellow */
@@ -672,48 +653,13 @@
     </div>
   </section>
 
-  <!-- 10. CONTACT FORM -->
-  <section class="contact" id="contact">
-    <div class="container">
-      <span class="eyebrow" style="text-align:center; display:block;">Get in touch</span>
-      <h2>Book your free discovery call</h2>
-      <p class="kicker">Fill this in and Stewart will follow up directly to find a time that works — no obligation, just a straight conversation.</p>
-
-      <form class="booking-form" id="booking-form" autocomplete="on">
-        <div class="form-row">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required autocomplete="name">
-        </div>
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required autocomplete="email">
-        </div>
-        <div class="form-row">
-          <label for="phone">Phone</label>
-          <input type="tel" id="phone" name="phone" required autocomplete="tel">
-        </div>
-        <div class="form-row">
-          <label for="business">Business name</label>
-          <input type="text" id="business" name="business" required autocomplete="organization">
-        </div>
-        <div class="form-row">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" placeholder="Tell us a bit about how bookings currently come into your business."></textarea>
-        </div>
-        <!-- Honeypot field for spam protection, hidden from real users and screen readers -->
-        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <button type="submit" class="btn btn-primary" style="width:100%;">Send enquiry</button>
-        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-      </form>
-    </div>
-  </section>
 
 </main>
 
 <footer>
   <div class="container">
-    <div class="footer-cta">
-      <p>Prefer to talk? Call or email Stewart directly.</p>
+    <div class="footer-cta" id="contact">
+      <p>Book your free discovery call — call or email Stewart directly.</p>
       <div class="cta-row">
         <a class="btn btn-primary btn-contact" href="tel:+61415351194">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
@@ -753,53 +699,6 @@
   </div>
 </footer>
 
-<script>
-  // Contact form submission via Web3Forms (free tier — no backend/server required).
-  // SETUP STEP (see README): replace YOUR_WEB3FORMS_ACCESS_KEY below with a real key
-  // from https://web3forms.com (free — just confirm with your business email).
-  const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
-
-  const form = document.getElementById('booking-form');
-  const status = document.getElementById('form-status');
-
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    status.textContent = '';
-    status.removeAttribute('data-state');
-
-    if (WEB3FORMS_ACCESS_KEY === "YOUR_WEB3FORMS_ACCESS_KEY") {
-      status.dataset.state = 'error';
-      status.textContent = "This form isn't fully connected yet — get in touch by phone or email above in the meantime.";
-      return;
-    }
-
-    const formData = new FormData(form);
-    formData.append("access_key", WEB3FORMS_ACCESS_KEY);
-    formData.append("subject", "New discovery call request — LorryBot website");
-
-    status.textContent = 'Sending...';
-
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData
-      });
-      const result = await response.json();
-      if (result.success) {
-        status.dataset.state = 'success';
-        status.textContent = "Thanks — Stewart will be in touch shortly to lock in a time.";
-        form.reset();
-      } else {
-        status.dataset.state = 'error';
-        status.textContent = "Something went wrong sending that. Please try phoning or emailing instead.";
-      }
-    } catch (err) {
-      status.dataset.state = 'error';
-      status.textContent = "Something went wrong sending that. Please try phoning or emailing instead.";
-    }
-  });
-</script>
 
 </body>
 </html>
